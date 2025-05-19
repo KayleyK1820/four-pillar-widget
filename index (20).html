@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>四柱跳字時鐘</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "PingFang TC", sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .zodiac-clock {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pillar-card {
+            background: linear-gradient(145deg, #222, #333);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .pillar-title {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .pillar-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .pillar-value:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="zodiac-clock">
+        <div class="pillar-card">
+            <div class="pillar-title">年柱</div>
+            <div class="pillar-value" id="yearPillar"></div>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-title">月柱</div>
+            <div class="pillar-value" id="monthPillar"></div>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-title">日柱</div>
+            <div class="pillar-value" id="dayPillar"></div>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-title">時柱</div>
+            <div class="pillar-value" id="hourPillar"></div>
+        </div>
+    </div>
+
+    <script>
+        const TG = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
+        const DZ = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+
+        function getPillars(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const hour = date.getHours();
+
+            // 年柱計算
+            const yearIndex = (year - 4) % 60;
+            const yearTG = TG[yearIndex % 10];
+            const yearDZ = DZ[yearIndex % 12];
+
+            // 月柱計算（簡化版）
+            const monthTG = TG[(year * 2 + month) % 10];
+            const monthDZ = DZ[(month + 1) % 12];
+
+            // 日柱計算
+            const baseDate = new Date(1900, 0, 31);
+            const days = Math.floor((date - baseDate) / (24 * 60 * 60 * 1000));
+            const dayTG = TG[(days + 10) % 10];
+            const dayDZ = DZ[(days + 12) % 12];
+
+            // 時柱計算
+            const hourBranch = Math.floor((hour + 1) / 2) % 12;
+            const hourTG = TG[((days + 10) * 2 + hourBranch) % 10];
+            const hourDZ = DZ[hourBranch];
+
+            return {
+                year: yearTG + yearDZ,
+                month: monthTG + monthDZ,
+                day: dayTG + dayDZ,
+                hour: hourTG + hourDZ
+            };
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const pillars = getPillars(now);
+
+            document.getElementById("yearPillar").textContent = pillars.year;
+            document.getElementById("monthPillar").textContent = pillars.month;
+            document.getElementById("dayPillar").textContent = pillars.day;
+            document.getElementById("hourPillar").textContent = pillars.hour;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+
+</html>
