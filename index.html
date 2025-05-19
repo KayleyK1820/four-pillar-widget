@@ -13,10 +13,78 @@
 </head>
 <body>
   <div class="zodiac-clock">
-    <div class="pillar-card"><div class="pillar-title">年柱</div><div class="pillar-value" id="yearPillar">甲子</div></div>
-    <div class="pillar-card"><div class="pillar-title">月柱</div><div class="pillar-value" id="monthPillar">丙寅</div></div>
-    <div class="pillar-card"><div class="pillar-title">日柱</div><div class="pillar-value" id="dayPillar">辛未</div></div>
-    <div class="pillar-card"><div class="pillar-title">時柱</div><div class="pillar-value" id="hourPillar">壬子</div></div>
+    <div class="pillar-card"><div class="pillar-title">年柱</div><div class="pillar-value" id="yearPillar"></div></div>
+    <div class="pillar-card"><div class="pillar-title">月柱</div><div class="pillar-value" id="monthPillar"></div></div>
+    <div class="pillar-card"><div class="pillar-title">日柱</div><div class="pillar-value" id="dayPillar"></div></div>
+    <div class="pillar-card"><div class="pillar-title">時柱</div><div class="pillar-value" id="hourPillar"></div></div>
   </div>
+  <script>
+    // 天干、地支
+    const heavenlyStems = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+    const earthlyBranches = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+    // 年柱計算
+    function getYearPillar(year) {
+      const stem = heavenlyStems[(year - 4) % 10];
+      const branch = earthlyBranches[(year - 4) % 12];
+      return stem + branch;
+    }
+
+    // 月柱簡化版（只根據陽曆月份，未考慮節氣，精確算法需用農曆庫）
+    function getMonthPillar(year, month) {
+      // 以每年正月起算，天干算法簡化
+      const yearStemIndex = (year - 4) % 10;
+      const monthStemIndex = (yearStemIndex * 2 + month + 1) % 10;
+      const branch = earthlyBranches[(month + 1) % 12];
+      return heavenlyStems[monthStemIndex] + branch;
+    }
+
+    // 日柱簡化（未考慮節氣、農曆，僅供參考）
+    function getDayPillar(date) {
+      // 1900-01-31 為甲子日
+      const baseDate = new Date(1900, 0, 31);
+      const offset = Math.floor((date - baseDate) / (24*60*60*1000));
+      const stem = heavenlyStems[(offset) % 10];
+      const branch = earthlyBranches[(offset) % 12];
+      return stem + branch;
+    }
+
+    // 時柱（根據24小時制，子時為23:00-00:59）
+    function getHourPillar(dayStemIndex, hour) {
+      const hourBranchIndex = Math.floor(((hour + 1) % 24) / 2);
+      const branch = earthlyBranches[hourBranchIndex];
+      // 時干計算（簡化版，精確算法需查表）
+      const stem = heavenlyStems[(dayStemIndex * 2 + hourBranchIndex) % 10];
+      return stem + branch;
+    }
+
+    function updatePillars() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth(); // 0-11
+      const day = now.getDate();
+      const hour = now.getHours();
+
+      // 年柱
+      const yearPillar = getYearPillar(year);
+      document.getElementById('yearPillar').textContent = yearPillar;
+
+      // 月柱（簡化）
+      const monthPillar = getMonthPillar(year, month);
+      document.getElementById('monthPillar').textContent = monthPillar;
+
+      // 日柱（簡化）
+      const dayPillar = getDayPillar(now);
+      document.getElementById('dayPillar').textContent = dayPillar;
+
+      // 時柱
+      const dayStemIndex = (Math.floor((now - new Date(1900,0,31))/(24*60*60*1000))) % 10;
+      const hourPillar = getHourPillar(dayStemIndex, hour);
+      document.getElementById('hourPillar').textContent = hourPillar;
+    }
+
+    updatePillars();
+    setInterval(updatePillars, 60000); // 每分鐘自動更新
+  </script>
 </body>
 </html>
