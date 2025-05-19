@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>四柱時鐘 Widget</title>
+  <style>
+    body { background: #1a1a1a; color: #fff; font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .zodiac-clock { display: flex; gap: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; backdrop-filter: blur(10px);}
+    .pillar-card { background: linear-gradient(145deg, #222, #333); border-radius: 10px; padding: 20px; text-align: center; min-width: 120px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);}
+    .pillar-title { font-size: 1.2rem; color: #888; margin-bottom: 15px;}
+    .pillar-value { font-size: 2.5rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.3);}
+  </style>
+</head>
+<body>
+  <div class="zodiac-clock">
+    <div class="pillar-card"><div class="pillar-title">年柱</div><div class="pillar-value" id="yearPillar">甲子</div></div>
+    <div class="pillar-card"><div class="pillar-title">月柱</div><div class="pillar-value" id="monthPillar">丙寅</div></div>
+    <div class="pillar-card"><div class="pillar-title">日柱</div><div class="pillar-value" id="dayPillar">辛未</div></div>
+    <div class="pillar-card"><div class="pillar-title">時柱</div><div class="pillar-value" id="hourPillar">壬子</div></div>
+  </div>
+</body>
+</html>
